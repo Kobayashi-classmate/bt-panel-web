@@ -83,9 +83,11 @@ status:
 login:
   pureUsername: 账号
   purePassword: 密码
+  pureVerifyCode: 验证码
   pureLogin: 登录
   pureLoginSuccess: 登录成功
   pureLoginFail: 登录失败
   pureUsernameReg: 请输入账号
   purePassWordReg: 请输入密码
+  pureVerifyCodeReg: 请输入验证码
   purePassWordRuleReg: 密码格式应为8-18位数字、字母、符号的任意两种组合

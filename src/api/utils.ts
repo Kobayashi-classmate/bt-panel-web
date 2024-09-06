@@ -1,1 +1,2 @@
-export const baseUrlApi = (url: string) => `http:127.0.0.1:3000/api/${url}`;
+export const baseUrlApi = (url: string) =>
+  `https://www.examples.com:3000/admin/${url}`;
