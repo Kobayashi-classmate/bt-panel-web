@@ -26,8 +26,8 @@ pnpm dev
 
 ```bash
 pnpm build
+```
 
 ## License
 
 [MIT © 2020-present, pure-admin](./LICENSE)
-```
