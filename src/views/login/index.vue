@@ -39,6 +39,8 @@ dataThemeChange(overallStyle.value);
 const { title, getDropdownItemStyle, getDropdownItemClass } = useNav();
 const { locale, translationCh, translationEn } = useTranslationLang();
 
+let codeUrl = "https://206.217.128.201/admin/verifycode?r=" + Math.random();
+
 const ruleForm = reactive({
   username: "admin",
   password: "123456",
@@ -180,6 +182,18 @@ onBeforeUnmount(() => {
                   :placeholder="t('login.purePassword')"
                   :prefix-icon="useRenderIcon(Lock)"
                 />
+              </el-form-item>
+            </Motion>
+
+            <Motion :delay="150">
+              <el-form-item prop="code">
+                <el-input
+                  v-model="ruleForm.code"
+                  clearable
+                  :placeholder="t('login.pureVerifyCode')"
+                  :prefix-icon="useRenderIcon('ri:shield-keyhole-line')"
+                />
+                <el-image :src="codeUrl" />
               </el-form-item>
             </Motion>
 
