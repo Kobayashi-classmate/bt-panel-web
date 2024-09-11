@@ -22,6 +22,7 @@ import globalization from "@/assets/svg/globalization.svg?component";
 import Lock from "@iconify-icons/ri/lock-fill";
 import Check from "@iconify-icons/ep/check";
 import User from "@iconify-icons/ri/user-3-fill";
+import { getVerifyCode } from "@/api/user";
 
 defineOptions({
   name: "Login"
@@ -39,13 +40,25 @@ dataThemeChange(overallStyle.value);
 const { title, getDropdownItemStyle, getDropdownItemClass } = useNav();
 const { locale, translationCh, translationEn } = useTranslationLang();
 
-let codeUrl = "https://206.217.128.201/admin/verifycode?r=" + Math.random();
-
 const ruleForm = reactive({
   username: "admin",
   password: "123456",
-  code: ""
+  code: null
 });
+
+const verifyCode = ref({
+  key: "",
+  base64: ""
+});
+
+var codeUrl = ref();
+
+const refreshImg = () => {
+  getVerifyCode().then(res => {
+    verifyCode.value = res.data;
+    codeUrl.value = verifyCode.value.base64;
+  });
+};
 
 const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
@@ -56,7 +69,8 @@ const onLogin = async (formEl: FormInstance | undefined) => {
         .loginByUsername({
           username: ruleForm.username,
           password: ruleForm.password,
-          code: ruleForm.code
+          code: ruleForm.code,
+          key: verifyCode.value.key
         })
         .then(res => {
           if (res.success) {
@@ -84,6 +98,7 @@ function onkeypress({ code }: KeyboardEvent) {
 
 onMounted(() => {
   window.document.addEventListener("keypress", onkeypress);
+  refreshImg();
 });
 
 onBeforeUnmount(() => {
@@ -193,7 +208,9 @@ onBeforeUnmount(() => {
                   :placeholder="t('login.pureVerifyCode')"
                   :prefix-icon="useRenderIcon('ri:shield-keyhole-line')"
                 />
-                <el-image :src="codeUrl" />
+                <div @click="refreshImg">
+                  <el-image :src="codeUrl" />
+                </div>
               </el-form-item>
             </Motion>
 

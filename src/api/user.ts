@@ -35,9 +35,24 @@ export type RefreshTokenResult = {
   };
 };
 
+export type verifyCode = {
+  success: boolean;
+  data: {
+    /** `验证码图片地址` */
+    base64: string;
+    /** key验证值 */
+    key: string;
+  };
+};
+
 /** 登录 */
 export const getLogin = (data?: object) => {
   return http.request<any>("post", baseUrlApi("login"), { data });
+};
+
+/** 获取验证码 */
+export const getVerifyCode = (data?: object) => {
+  return http.request<verifyCode>("get", baseUrlApi("verifycode"), { data });
 };
 
 /** 刷新`token` */
