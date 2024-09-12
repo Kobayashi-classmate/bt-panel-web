@@ -9,7 +9,7 @@ import type { FormInstance } from "element-plus";
 import { $t, transformI18n } from "@/plugins/i18n";
 import { useLayout } from "@/layout/hooks/useLayout";
 import { useUserStoreHook } from "@/store/modules/user";
-import { initRouter, getTopMenu } from "@/router/utils";
+import { initRouter, getTopMenu, addPathMatch } from "@/router/utils";
 import { bg, avatar, illustration } from "./utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
@@ -25,6 +25,8 @@ import User from "@iconify-icons/ri/user-3-fill";
 import { getVerifyCode } from "@/api/user";
 
 import { Md5 } from "ts-md5";
+import { setToken } from "@/utils/auth";
+import { usePermissionStoreHook } from "@/store/modules/permission";
 
 defineOptions({
   name: "Login"
@@ -65,43 +67,83 @@ const refreshImg = () => {
   });
 };
 
+// const onLogin = async (formEl: FormInstance | undefined) => {
+//   if (!formEl) return;
+//   await formEl.validate((valid, fields) => {
+//     var userMd5 = ruleForm.code;
+//     var userCode = userMd5.toLowerCase();
+//     var md5 = Md5.hashStr(userCode);
+//     // var userPassword = Md5.hashStr(ruleForm.password);
+
+//     if (md5 == verifyCode.value.md5) {
+//       if (valid) {
+//         loading.value = true;
+//         useUserStoreHook()
+//           .loginByUsername({
+//             username: ruleForm.username,
+//             // password: userPassword,
+//             password: ruleForm.password,
+//             code: ruleForm.code,
+//             key: verifyCode.value.key
+//           })
+//           .then(res => {
+//             if (res.success) {
+//               // 获取后端路由
+//               return initRouter().then(() => {
+//                 router.push(getTopMenu(true).path).then(() => {
+//                   message(t("login.pureLoginSuccess"), { type: "success" });
+//                 });
+//               });
+//             } else {
+//               message(t("login.pureLoginFail"), { type: "error" });
+//               refreshImg();
+//             }
+//           })
+//           .finally(() => (loading.value = false));
+//       }
+//     } else {
+//       message(t("login.pureVerifyCodeErro"), { type: "error" });
+//       refreshImg();
+//     }
+//   });
+// };
+
 const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(valid => {
     var userMd5 = ruleForm.code;
     var userCode = userMd5.toLowerCase();
     var md5 = Md5.hashStr(userCode);
     // var userPassword = Md5.hashStr(ruleForm.password);
-
-    if (md5 == verifyCode.value.md5) {
-      if (valid) {
-        loading.value = true;
-        useUserStoreHook()
-          .loginByUsername({
-            username: ruleForm.username,
-            // password: userPassword,
-            password: ruleForm.password,
-            code: ruleForm.code,
-            key: verifyCode.value.key
-          })
-          .then(res => {
-            if (res.success) {
-              // 获取后端路由
-              return initRouter().then(() => {
-                router.push(getTopMenu(true).path).then(() => {
-                  message(t("login.pureLoginSuccess"), { type: "success" });
-                });
-              });
-            } else {
-              message(t("login.pureLoginFail"), { type: "error" });
-              refreshImg();
-            }
-          })
-          .finally(() => (loading.value = false));
-      }
-    } else {
-      message(t("login.pureVerifyCodeErro"), { type: "error" });
-      refreshImg();
+    if (valid) {
+      loading.value = true;
+      usePermissionStoreHook()
+        .loginByUsername({
+          username: ruleForm.username,
+          // password: userPassword,
+          password: ruleForm.password,
+          code: ruleForm.code,
+          key: verifyCode.value.key
+        })
+        .then(res => {
+          if (res.success) {
+            setToken({
+              username: ruleForm.username,
+              roles: ["admin"],
+              accessToken: res.data.admin_token
+            } as any);
+            // 全部采取静态路由模式
+            usePermissionStoreHook().handleWholeMenus([]);
+            addPathMatch();
+            router.push(getTopMenu(true).path);
+            message("登录成功", { type: "success" });
+            loading.value = false;
+          } else {
+            message(t("login.pureLoginFail"), { type: "error" });
+            refreshImg();
+          }
+        })
+        .finally(() => (loading.value = false));
     }
   });
 };

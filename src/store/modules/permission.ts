@@ -8,9 +8,12 @@ import {
   filterTree,
   constantMenus,
   filterNoPermissionTree,
-  formatFlatteningRoutes
+  formatFlatteningRoutes,
+  router
 } from "../utils";
 import { useMultiTagsStoreHook } from "./multiTags";
+import { getLogin, type UserResult } from "@/api/user";
+import { removeToken, setToken } from "@/utils/auth";
 
 export const usePermissionStore = defineStore({
   id: "pure-permission",
@@ -66,6 +69,29 @@ export const usePermissionStore = defineStore({
     clearAllCachePage() {
       this.wholeMenus = [];
       this.cachePageList = [];
+    },
+    /** 登入 */
+    async loginByUsername(data) {
+      return new Promise<UserResult>((resolve, reject) => {
+        getLogin(data)
+          .then(data => {
+            if (data?.success) setToken(data.data);
+            resolve(data);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    /** 前端登出（不调用接口） */
+    logOut() {
+      this.username = "";
+      this.roles = [];
+      this.permissions = [];
+      removeToken();
+      // useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
+      // resetRouter();
+      router.push("/login");
     }
   }
 });
