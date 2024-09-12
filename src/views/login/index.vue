@@ -24,6 +24,8 @@ import Check from "@iconify-icons/ep/check";
 import User from "@iconify-icons/ri/user-3-fill";
 import { getVerifyCode } from "@/api/user";
 
+import { Md5 } from "ts-md5";
+
 defineOptions({
   name: "Login"
 });
@@ -46,9 +48,12 @@ const ruleForm = reactive({
   code: null
 });
 
+var key = Md5.hashStr("qu8q");
+
 const verifyCode = ref({
   key: "",
-  base64: ""
+  base64: "",
+  md5: ""
 });
 
 var codeUrl = ref();
@@ -63,28 +68,40 @@ const refreshImg = () => {
 const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
-    if (valid) {
-      loading.value = true;
-      useUserStoreHook()
-        .loginByUsername({
-          username: ruleForm.username,
-          password: ruleForm.password,
-          code: ruleForm.code,
-          key: verifyCode.value.key
-        })
-        .then(res => {
-          if (res.success) {
-            // 获取后端路由
-            return initRouter().then(() => {
-              router.push(getTopMenu(true).path).then(() => {
-                message(t("login.pureLoginSuccess"), { type: "success" });
+    var userMd5 = ruleForm.code;
+    var userCode = userMd5.toLowerCase();
+    var md5 = Md5.hashStr(userCode);
+    // var userPassword = Md5.hashStr(ruleForm.password);
+
+    if (md5 == verifyCode.value.md5) {
+      if (valid) {
+        loading.value = true;
+        useUserStoreHook()
+          .loginByUsername({
+            username: ruleForm.username,
+            // password: userPassword,
+            password: ruleForm.password,
+            code: ruleForm.code,
+            key: verifyCode.value.key
+          })
+          .then(res => {
+            if (res.success) {
+              // 获取后端路由
+              return initRouter().then(() => {
+                router.push(getTopMenu(true).path).then(() => {
+                  message(t("login.pureLoginSuccess"), { type: "success" });
+                });
               });
-            });
-          } else {
-            message(t("login.pureLoginFail"), { type: "error" });
-          }
-        })
-        .finally(() => (loading.value = false));
+            } else {
+              message(t("login.pureLoginFail"), { type: "error" });
+              refreshImg();
+            }
+          })
+          .finally(() => (loading.value = false));
+      }
+    } else {
+      message(t("login.pureVerifyCodeErro"), { type: "error" });
+      refreshImg();
     }
   });
 };
@@ -207,10 +224,22 @@ onBeforeUnmount(() => {
                   clearable
                   :placeholder="t('login.pureVerifyCode')"
                   :prefix-icon="useRenderIcon('ri:shield-keyhole-line')"
-                />
-                <div @click="refreshImg">
-                  <el-image :src="codeUrl" />
-                </div>
+                >
+                  <template v-slot:append>
+                    <el-image
+                      :src="codeUrl"
+                      fit="scale-down"
+                      style="width: 120px; height: 40px"
+                      @click="refreshImg"
+                    >
+                      <template #error>
+                        <div class="image-slot">
+                          <el-icon><icon-picture /></el-icon>
+                        </div>
+                      </template>
+                    </el-image>
+                  </template>
+                </el-input>
               </el-form-item>
             </Motion>
 

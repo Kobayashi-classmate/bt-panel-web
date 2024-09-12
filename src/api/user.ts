@@ -42,6 +42,8 @@ export type verifyCode = {
     base64: string;
     /** key验证值 */
     key: string;
+    /** md5加密值 */
+    md5: string;
   };
 };
 

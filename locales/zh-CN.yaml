@@ -87,6 +87,7 @@ login:
   pureLogin: 登录
   pureLoginSuccess: 登录成功
   pureLoginFail: 登录失败
+  pureVerifyCodeErro: 验证码错误
   pureUsernameReg: 请输入账号
   purePassWordReg: 请输入密码
   pureVerifyCodeReg: 请输入验证码
