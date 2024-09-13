@@ -67,61 +67,20 @@ const refreshImg = () => {
   });
 };
 
-// const onLogin = async (formEl: FormInstance | undefined) => {
-//   if (!formEl) return;
-//   await formEl.validate((valid, fields) => {
-//     var userMd5 = ruleForm.code;
-//     var userCode = userMd5.toLowerCase();
-//     var md5 = Md5.hashStr(userCode);
-//     // var userPassword = Md5.hashStr(ruleForm.password);
-
-//     if (md5 == verifyCode.value.md5) {
-//       if (valid) {
-//         loading.value = true;
-//         useUserStoreHook()
-//           .loginByUsername({
-//             username: ruleForm.username,
-//             // password: userPassword,
-//             password: ruleForm.password,
-//             code: ruleForm.code,
-//             key: verifyCode.value.key
-//           })
-//           .then(res => {
-//             if (res.success) {
-//               // 获取后端路由
-//               return initRouter().then(() => {
-//                 router.push(getTopMenu(true).path).then(() => {
-//                   message(t("login.pureLoginSuccess"), { type: "success" });
-//                 });
-//               });
-//             } else {
-//               message(t("login.pureLoginFail"), { type: "error" });
-//               refreshImg();
-//             }
-//           })
-//           .finally(() => (loading.value = false));
-//       }
-//     } else {
-//       message(t("login.pureVerifyCodeErro"), { type: "error" });
-//       refreshImg();
-//     }
-//   });
-// };
-
 const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(valid => {
     var userMd5 = ruleForm.code;
     var userCode = userMd5.toLowerCase();
     var md5 = Md5.hashStr(userCode);
-    // var userPassword = Md5.hashStr(ruleForm.password);
+    var userPassword = Md5.hashStr(ruleForm.password);
     if (valid) {
       loading.value = true;
       usePermissionStoreHook()
         .loginByUsername({
           username: ruleForm.username,
-          // password: userPassword,
-          password: ruleForm.password,
+          password: userPassword,
+          // password: ruleForm.password,
           code: ruleForm.code,
           key: verifyCode.value.key
         })
