@@ -87,8 +87,11 @@ login:
   pureLogin: 登录
   pureLoginSuccess: 登录成功
   pureLoginFail: 登录失败
+  pureLoginUserErr: 用户名或密码错误
   pureVerifyCodeErro: 验证码错误
   pureUsernameReg: 请输入账号
   purePassWordReg: 请输入密码
   pureVerifyCodeReg: 请输入验证码
   purePassWordRuleReg: 密码格式应为8-18位数字、字母、符号的任意两种组合
+message:
+  pureMsgErr: 服务器错误

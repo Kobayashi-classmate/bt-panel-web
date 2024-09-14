@@ -2,7 +2,7 @@ import { http } from "@/utils/http";
 import { baseUrlApi } from "./utils";
 import Cookies from "js-cookie";
 
-const data = Cookies.get("admin_token");
+const data = Cookies.get("accessToken");
 console.log(data);
 
 export type getStatisticsResult = {

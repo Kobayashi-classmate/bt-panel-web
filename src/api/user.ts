@@ -3,6 +3,7 @@ import { baseUrlApi } from "./utils";
 
 export type UserResult = {
   success: boolean;
+  codeimg: boolean;
   data: {
     /** 头像 */
     avatar: string;
@@ -15,7 +16,7 @@ export type UserResult = {
     /** 按钮级别权限 */
     permissions: Array<string>;
     /** `token` */
-    admin_token: string;
+    accessToken: string;
     /** 用于调用刷新`accessToken`的接口时所需的`token` */
     refreshToken: string;
     /** `accessToken`的过期时间（格式'xxxx/xx/xx xx:xx:xx'） */
@@ -59,5 +60,7 @@ export const getVerifyCode = (data?: object) => {
 
 /** 刷新`token` */
 export const refreshTokenApi = (data?: object) => {
-  return http.request<RefreshTokenResult>("post", "/refresh-token", { data });
+  return http.request<RefreshTokenResult>("post", baseUrlApi("refresh-token"), {
+    data
+  });
 };
