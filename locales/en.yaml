@@ -22,6 +22,7 @@ login:
   pureLogin: Login
   pureLoginFail: Login Fail
   pureLoginSuccess: Login Success
+  pureLoginUserErr: Wrong username or password
   purePassWordReg: Please enter password
   purePassWordRuleReg: The password format should be any combination of 8-18 digits
   purePassword: Password
@@ -30,6 +31,7 @@ login:
   pureVerifyCode: Verification code
   pureVerifyCodeErro: Verification code error
   pureVerifyCodeReg: Please enter the verification code
+  pureVerifyCodeTimeErro: Verification code expired
 menus:
   pureAbnormal: Abnormal Page
   pureFive: '500'
@@ -42,6 +44,8 @@ menus:
   purePermissionButtonLogin: Login interface return button permission
   purePermissionButtonRouter: Route return button permission
   purePermissionPage: Page Permission
+message:
+  pureMsgErr: Server error
 panel:
   pureClearCache: Clear Cache
   pureClearCacheAndToLogin: Clear cache and return to login page

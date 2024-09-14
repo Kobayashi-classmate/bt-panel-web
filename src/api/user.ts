@@ -60,7 +60,7 @@ export const getVerifyCode = (data?: object) => {
 
 /** 刷新`token` */
 export const refreshTokenApi = (data?: object) => {
-  return http.request<RefreshTokenResult>("post", baseUrlApi("refresh-token"), {
+  return http.request<RefreshTokenResult>("post", baseUrlApi("refresh_token"), {
     data
   });
 };

@@ -105,7 +105,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
               refreshImg();
               ruleForm.code = null;
             } else {
-              message(t("login.pureVerifyCodeErro"), { type: "error" });
+              message(t("login.pureVerifyCodeTimeErro"), { type: "error" });
               refreshImg();
               ruleForm.code = null;
             }
@@ -114,7 +114,6 @@ const onLogin = async (formEl: FormInstance | undefined) => {
       }
     } else {
       message(t("login.pureVerifyCodeErro"), { type: "error" });
-      refreshImg();
       ruleForm.code = null;
     }
   });
